@@ -1,5 +1,5 @@
 "use client";
-import { activeClass, useMenuStore } from "@/store/menuStore";
+import { activeClass, inactiveClass, useMenuStore } from "@/store/menuStore";
 import { MenuItem as TMenuItem } from "@/store/types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -29,7 +29,18 @@ function MenuItem({ item }: { item: TMenuItem }) {
   };
 
   const handleClick = () => {
-    if(isActive) { return }
+    if(isActive) {
+      const newMenu = menu.map(item => { 
+        if(item.name === name) {
+            // @ts-ignore
+            const icon = React.cloneElement(item.icon, { className: inactiveClass });
+            return { ...item, icon, isActive: false }
+        }
+        return item
+    });
+    setMenu(newMenu);
+      return 
+    }
     const newMenu = menu.map(item => { 
         if(item.name === name) {
             // @ts-ignore
